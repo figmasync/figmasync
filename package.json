@@ -1,0 +1,11 @@
+{
+  "name": "root",
+  "private": "false",
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run build"
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}
