@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { GITHUB_LOGIN_URL } from "@/lib/config";
 const GithubLogin = ({ loginUrl, clientId }: GithubLoginProps) => {
-    console.log(loginUrl, clientId)
+
   return (
     <div className="flex flex-col items-center px-4 justify-center h-full space-y-4">
        <button className="flex flex-row items-center" onClick={()=>{
