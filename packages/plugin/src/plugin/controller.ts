@@ -1,26 +1,34 @@
+import { Buffer } from "buffer";
 figma.showUI(__html__);
 
-figma.ui.onmessage = (msg) => {
-  if (msg.type === 'create-rectangles') {
-    const nodes = [];
-
-    for (let i = 0; i < msg.count; i++) {
-      const rect = figma.createRectangle();
-      rect.x = i * 150;
-      rect.fills = [{ type: 'SOLID', color: { r: 1, g: 0.5, b: 0 } }];
-      figma.currentPage.appendChild(rect);
-      nodes.push(rect);
+figma.ui.onmessage = async (msg) => {
+  if (msg?.type === "save-github-token") {
+    const token = msg?.token;
+    //  base64 decode token
+    try {
+      let data = Buffer.from(token, "base64").toString("ascii");
+      JSON.parse(data);
+      await figma.clientStorage.setAsync("github-token", data);
+      figma.ui.postMessage({
+        type: "save-github-token-success",
+      });
+      figma.notify("Token saved successfully");
+    } catch (error) {
+      console.error(error);
+      figma.ui.postMessage({
+        type: "save-github-token-error",
+      });
+      figma.notify("Invalid token. Please login again.");
     }
-
-    figma.currentPage.selection = nodes;
-    figma.viewport.scrollAndZoomIntoView(nodes);
-
-    // This is how figma responds back to the ui
+  }
+  if (msg?.type === "get-github-token") {
+    const token = await figma.clientStorage.getAsync("github-token");
     figma.ui.postMessage({
-      type: 'create-rectangles',
-      message: `Created ${msg.count} Rectangles`,
+      type: "get-github-token-success",
+      token: token,
     });
   }
-
-  figma.closePlugin();
+  if (msg?.type === "close-plugin") {
+    figma.closePlugin();
+  }
 };
