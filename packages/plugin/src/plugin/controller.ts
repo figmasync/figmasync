@@ -1,5 +1,8 @@
 import { Buffer } from "buffer";
-figma.showUI(__html__);
+figma.showUI(__html__, {
+  width: 600,
+  height: 600,
+});
 
 figma.ui.onmessage = async (msg) => {
   if (msg?.type === "save-github-token") {
@@ -26,6 +29,12 @@ figma.ui.onmessage = async (msg) => {
     figma.ui.postMessage({
       type: "get-github-token-success",
       token: token,
+    });
+  }
+  if (msg?.type === "remove-github-token") {
+    await figma.clientStorage.setAsync("github-token", "");
+    figma.ui.postMessage({
+      type: "remove-github-token-success",
     });
   }
   if (msg?.type === "close-plugin") {

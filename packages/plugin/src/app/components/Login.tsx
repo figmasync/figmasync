@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import { GITHUB_LOGIN_URL } from "../../config";
 import ListIssue from "./ListIssue";
 import { useGithub } from "../hooks/github";
-function App() {
+import {useRoutes} from '../hooks/routes';
+
+const Login = () => {
   const [open, setOpen] = useState(true);
   const [showIssue, setShowIssue] = useState(false);
+  const [, setRoutes] = useRoutes();
   const [token, setToken] = useState<string | undefined>("");
-  const {token:githubToken,setToken:setGithubToken} = useGithub();
+  const { token: githubToken, setToken: setGithubToken } = useGithub();
   // redirect to login
   const loginWithGithub = () => {
     setOpen(true);
@@ -19,36 +22,55 @@ function App() {
       "*"
     );
   };
+  const logout = () => {
+    parent.postMessage({ pluginMessage: { type: "remove-github-token" } }, "*");
+  };
   // listen to messages from plugin controller
-  useEffect(()=>{
-   try {
-    window.onmessage = (event:any) => {
-      const { type } = event.data.pluginMessage;
-      if (type === "save-github-token-success") {
-        setShowIssue(true);
-      }
-      if(type === "save-github-token-error"){
-        setOpen(false);
-      }
-      if (type === "get-github-token-success") {
-        try {
-          setGithubToken(JSON.parse(event?.data?.pluginMessage?.token));
-        } catch (error) {
-          console.error(error);
+  useEffect(() => {
+    try {
+      window.onmessage = (event: any) => {
+        const { type } = event.data.pluginMessage;
+        if (type === "save-github-token-success") {
+          setShowIssue(true);
         }
-      }
-    };
-   } catch (error) {
-    console.log(error)
-   }
-  },[])
-  useEffect(()=>{
-    if(githubToken?.access_token){
+        if (type === "save-github-token-error") {
+          setOpen(false);
+        }
+        if (type === "get-github-token-success") {
+          try {
+            setGithubToken(JSON.parse(event?.data?.pluginMessage?.token));
+          } catch (error) {
+            console.error(error);
+          }
+        }
+        if (type === "remove-github-token-success") {
+          setOpen(false);
+          setShowIssue(false)
+          setRoutes('/')
+        }
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  useEffect(() => {
+    if (githubToken?.access_token) {
       setShowIssue(true);
     }
-  },[githubToken])
-  if(showIssue){
-    return <ListIssue />
+  }, [githubToken]);
+  if (showIssue) {
+    return (
+      <>
+        <button
+          onClick={() => {
+            logout();
+          }}
+        >
+          logout
+        </button>
+        <ListIssue />
+      </>
+    );
   }
   return (
     <div>
@@ -82,6 +104,6 @@ function App() {
       )}
     </div>
   );
-}
+};
 
-export default App;
+export default Login;
