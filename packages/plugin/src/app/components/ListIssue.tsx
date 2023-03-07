@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useGithub } from "../hooks/github";
 import { github } from "../../api";
 import "./list-issue.css";
 
 const GithubIssuesList = ({ issues = [] }) => {
+  const navigate = useNavigate();
+
   return (
     <ul className="issues-list">
       {issues.map((issue) => (
         <li key={issue.id} className="issue">
           <h3 className="issue-title">{issue.title}</h3>
           <p className="issue-description">{issue.body}</p>
-          <button className="issue-open-comment">Open issue</button>
+          <button
+            className="issue-open-comment"
+            onClick={() => {
+              navigate("/comments", {
+                state: issue,
+              });
+            }}
+          >
+            Open issue
+          </button>
         </li>
       ))}
     </ul>
