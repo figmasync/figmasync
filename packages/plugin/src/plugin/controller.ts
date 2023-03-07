@@ -40,4 +40,7 @@ figma.ui.onmessage = async (msg) => {
   if (msg?.type === "close-plugin") {
     figma.closePlugin();
   }
+  if (msg?.type === "show-notification") {
+    figma.notify(msg?.message);
+  }
 };
