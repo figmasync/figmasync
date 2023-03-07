@@ -36,14 +36,12 @@ const ListIssue = () => {
   useEffect(() => {
     (async () => {
       if (token?.access_token) {
-        console.log(token?.token_type);
         setLoading(true);
         try {
           const response = await github.getAllIssues(
             token.access_token,
             token?.token_type
           );
-          console.log(response);
           setIssues(response);
           setLoading(false);
         } catch (error) {
