@@ -1,0 +1,24 @@
+.container {
+  position: relative; /* Allow absolute positioning of buttons */
+  padding-top: 50px; /* Add padding to make space for back button */
+}
+
+.back-button {
+  position: absolute; /* Position the back button relative to the container */
+  top: 0;
+  left: 0;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
+.logout-button {
+  position: absolute; /* Position the logout button relative to the container */
+  top: 0;
+  right: 0;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 5px;
+}

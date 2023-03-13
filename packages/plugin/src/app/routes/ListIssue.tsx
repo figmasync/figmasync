@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGithub } from "../hooks/github";
 import { github } from "../../api";
+import withHeader from "../hoc/header";
 import "../css/list-issue.css";
 
 const GithubIssuesList = ({ issues = [] }) => {
@@ -63,4 +64,4 @@ const ListIssue = () => {
   );
 };
 
-export default ListIssue;
+export default withHeader(ListIssue);

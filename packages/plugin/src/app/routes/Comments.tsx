@@ -3,7 +3,9 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useGithub } from "../hooks/github";
 import MarkdownViewer from "../components/MarkdownViewer";
+import withHeader from "../hoc/header";
 import "../css/comments.css";
+
 const Comments = () => {
   const [comments, setComments] = useState([]);
   const [isLoading, setLoading] = useState(false);
@@ -56,4 +58,4 @@ const Comments = () => {
     </div>
   );
 };
-export default Comments;
+export default withHeader(Comments);
