@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGithub } from "../hooks/github";
 import { github } from "../../api";
-import "./list-issue.css";
+import "../css/list-issue.css";
 
 const GithubIssuesList = ({ issues = [] }) => {
   const navigate = useNavigate();

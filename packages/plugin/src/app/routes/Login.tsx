@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GITHUB_LOGIN_URL } from "../../config";
-import "./login.css";
+import "../css/login.css";
 
 const Login = () => {
   const [token, setToken] = useState("");

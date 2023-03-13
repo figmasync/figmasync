@@ -1,7 +1,7 @@
 import { Buffer } from "buffer";
 figma.showUI(__html__, {
-  width: 600,
-  height: 600,
+  width: 1000,
+  height: 800,
 });
 
 figma.ui.onmessage = async (msg) => {

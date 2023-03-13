@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { GITHUB_LOGIN_URL } from "../../config";
-import ListIssue from "./ListIssue";
+import ListIssue from "../routes/ListIssue";
 import { useGithub } from "../hooks/github";
 function App() {
   const [open, setOpen] = useState(true);
