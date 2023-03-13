@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useGithub } from "../hooks/github";
-
+import MarkdownViewer from "../components/MarkdownViewer";
+import "../css/comments.css";
 const Comments = () => {
   const [comments, setComments] = useState([]);
   const [isLoading, setLoading] = useState(false);
@@ -43,7 +44,11 @@ const Comments = () => {
               <div className="comment-date">{comment.created_at}</div>
             </div>
             <div className="comment-body">
-              {comment?.body && <div>{comment?.body}</div>}
+              {comment?.body && (
+                <div>
+                  <MarkdownViewer>{comment?.body}</MarkdownViewer>
+                </div>
+              )}
             </div>
           </li>
         ))}

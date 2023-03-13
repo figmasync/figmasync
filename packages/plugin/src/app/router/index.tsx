@@ -3,7 +3,7 @@ import { MemoryRouter, Routes, Route } from "react-router-dom";
 
 import Login from "../components/Login";
 import ListIssue from '../components/ListIssue';
-import Comments from "../components/Comments";
+import Comments from "../routes/Comments";
 
 const CustomRouter = () => {
     return (

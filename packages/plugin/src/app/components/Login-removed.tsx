@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { GITHUB_LOGIN_URL } from "../../config";
 import ListIssue from "./ListIssue";
 import { useGithub } from "../hooks/github";
-import {useRoutes} from '../hooks/routes';
+// import {useRoutes} from '../hooks/routes';
 
 const Login = () => {
   const [open, setOpen] = useState(true);
   const [showIssue, setShowIssue] = useState(false);
-  const [, setRoutes] = useRoutes();
+  // const [, setRoutes] = useRoutes();
+  const setRoutes = (data:any)=>{
+    console.log(data)
+  }
   const [token, setToken] = useState<string | undefined>("");
   const { token: githubToken, setToken: setGithubToken } = useGithub();
   // redirect to login
