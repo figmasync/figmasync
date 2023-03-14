@@ -2,11 +2,49 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useGithub } from "../hooks/github";
+import { useCapture } from "../hooks/capture";
 import MarkdownViewer from "../components/MarkdownViewer";
 import withHeader from "../hoc/header";
 import "../css/comments.css";
 
 const InfoSection = ({ issue }: { issue: Issue }) => {
+  const { token } = useGithub();
+  const { capture, isLoading: isLoadingCaptureEvent, blobUrls } = useCapture();
+  const onClickComment = () => {
+    capture();
+  };
+  const postBlob = async (blobUrl) => {
+    if (!blobUrl) return;
+    let blobApiLink = issue?.repository?.url;
+    if (!blobApiLink) return;
+    console.log(token,'xxxxx')
+    if(!token?.access_token) return;
+    blobApiLink = blobApiLink + "/git/blobs";
+    
+    try {
+      const response = await axios.post(
+        blobApiLink,
+        {
+          content: blobUrl,
+        },
+        {
+          headers: {
+            Authorization: `${token?.token_type} ${token.access_token}`,
+            Accept: 'application/vnd.github+json'
+          },
+        }
+      );
+      console.log("response", response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    console.log("blobUrls incomming", blobUrls);
+    if (blobUrls?.length) {
+      blobUrls.forEach(postBlob);
+    }
+  }, [blobUrls,token]);
   return (
     <div className="info-section">
       {/* <h2>Comment Information</h2> */}
@@ -28,7 +66,16 @@ const InfoSection = ({ issue }: { issue: Issue }) => {
             })}
           </ul>
         </div>
-        <p></p>
+        <p>
+          <button
+            onClick={() => {
+              onClickComment();
+            }}
+            disabled={isLoadingCaptureEvent}
+          >
+            {isLoadingCaptureEvent ? "Loading..." : "Comment on issue"}
+          </button>
+        </p>
         {/* additional information */}
       </div>
     </div>
