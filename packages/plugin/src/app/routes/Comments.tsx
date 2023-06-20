@@ -1,24 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { useGithub } from "../hooks/github";
-import { useCapture } from "../hooks/capture";
+
 import MarkdownViewer from "../components/MarkdownViewer";
 import withHeader from "../hoc/header";
 import "../css/comments.css";
 
 const InfoSection = ({ issue, token }: { issue: Issue; token: any }) => {
-  const { capture, isLoading: isLoadingCaptureEvent, blobUrls } = useCapture();
-  const [preview,setPreview] = useState(undefined);
-  const onClickComment = () => {
-    capture();
-  };
-  
-  useEffect(() => {
-    if(blobUrls && blobUrls[0]){
-      setPreview(blobUrls[0])
-    }
-  }, [blobUrls, token]);
+  const navigate = useNavigate();
+
   return (
     <div className="info-section">
       {/* <h2>Comment Information</h2> */}
@@ -43,14 +35,14 @@ const InfoSection = ({ issue, token }: { issue: Issue; token: any }) => {
         <p>
           <button
             onClick={() => {
-              onClickComment();
+              navigate("/comments-preview", {
+                state: { issue, token },
+              });
             }}
-            disabled={isLoadingCaptureEvent}
           >
-            {isLoadingCaptureEvent ? "Loading..." : "Comment on issue"}
+            Comment on issue
           </button>
         </p>
-        {preview && (<img src={preview} alt="screenshot" />)}
         {/* additional information */}
       </div>
     </div>
@@ -106,7 +98,6 @@ const Comments = () => {
               </li>
             ))}
           </ul>
-          
         </div>
         <InfoSection issue={location?.state} token={token} />
       </div>
