@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { useGithub } from "../hooks/github";
+
 import MarkdownViewer from "../components/MarkdownViewer";
 import withHeader from "../hoc/header";
 import "../css/comments.css";
 
-const InfoSection = ({ issue }: { issue: Issue }) => {
+const InfoSection = ({ issue, token }: { issue: Issue; token: any }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="info-section">
       {/* <h2>Comment Information</h2> */}
@@ -28,7 +32,18 @@ const InfoSection = ({ issue }: { issue: Issue }) => {
             })}
           </ul>
         </div>
-        <p></p>
+        <p>
+          <button
+            onClick={() => {
+              console.log(issue, token,'xxxx from parent')
+              navigate("/preview", {
+                state: issue,
+              });
+            }}
+          >
+            Comment on issue
+          </button>
+        </p>
         {/* additional information */}
       </div>
     </div>
@@ -85,7 +100,7 @@ const Comments = () => {
             ))}
           </ul>
         </div>
-        <InfoSection issue={location?.state} />
+        <InfoSection issue={location?.state} token={token} />
       </div>
     </div>
   );

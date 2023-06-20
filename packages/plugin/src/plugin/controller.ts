@@ -1,4 +1,6 @@
 import { Buffer } from "buffer";
+import { capture } from "./capture";
+
 figma.showUI(__html__, {
   width: 1000,
   height: 800,
@@ -42,5 +44,8 @@ figma.ui.onmessage = async (msg) => {
   }
   if (msg?.type === "show-notification") {
     figma.notify(msg?.message);
+  }
+  if (msg?.type === "capture-nodes") {
+    capture(figma?.currentPage);
   }
 };
