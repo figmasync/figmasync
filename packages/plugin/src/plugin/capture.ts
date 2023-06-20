@@ -10,33 +10,34 @@ const capture = async (nodes: PageNode) => {
     figma?.notify("Please select at least one node");
     return;
   }
-  let exportableBytes: ExportableBytes[] = [];
-  for (let node of selection) {
-    let { name, exportSettings } = node;
-    if (exportSettings.length === 0) {
-      exportSettings = [
-        {
-          format: "PNG",
-          suffix: "",
-          constraint: { type: "SCALE", value: 1 },
-          contentsOnly: true,
-        },
-      ];
-    }
-    for (let setting of exportSettings) {
-      let defaultSetting = setting;
-      const bytes = await node.exportAsync(defaultSetting);
-      exportableBytes.push({
-        name,
-        setting,
-        bytes,
-      });
-    }
-  }
-  
+  const bytesArray: any[] = [];
+  await Promise.all(
+    selection?.map(async (node) => {
+      let { name, exportSettings } = node;
+      if (exportSettings?.length === 0) {
+        exportSettings = [
+          {
+            format: "PNG",
+            suffix: "",
+            constraint: { type: "SCALE", value: 1 },
+            contentsOnly: true,
+          },
+        ];
+      }
+      for (let setting of exportSettings) {
+        let defaultSetting = setting;
+        const bytes = await node.exportAsync(defaultSetting);
+        bytesArray.push({
+          name,
+          setting,
+          bytes,
+        });
+      }
+    })
+  );
   figma?.ui?.postMessage({
-    type: "capture-nodes-success",
-    exportableBytes,
+    type: "capture-bytes-success",
+    bytesArray,
   });
 };
 

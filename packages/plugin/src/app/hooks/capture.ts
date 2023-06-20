@@ -9,14 +9,14 @@ const useCapture = () => {
     setIsLoading(true);
   };
 
-  function typedArrayToBuffer(array) {
+  const typedArrayToBuffer = (array) => {
     return array.buffer.slice(
       array.byteOffset,
       array.byteLength + array.byteOffset
     );
   }
 
-  function exportTypeToBlobType(type: string) {
+  const exportTypeToBlobType = (type: string) => {
     switch (type) {
       case "PDF":
         return "application/pdf";
@@ -31,7 +31,7 @@ const useCapture = () => {
     }
   }
 
-  function exportTypeToFileExtension(type: string) {
+  const exportTypeToFileExtension = (type: string)=> {
     switch (type) {
       case "PDF":
         return ".pdf";
@@ -50,20 +50,17 @@ const useCapture = () => {
     window.onmessage = (event: any) => {
       try {
         const blobUrls = [];
-        if (event?.data?.pluginMessage?.type === "capture-nodes-success") {
-          const { exportableBytes } = event?.data?.pluginMessage;
-          if (exportableBytes) {
-            for (let data of exportableBytes) {
-              const { bytes, name, setting } = data;
-              const cleanBytes = typedArrayToBuffer(bytes);
-              const type = exportTypeToBlobType(setting.format);
-              const extension = exportTypeToFileExtension(setting.format);
-              let blob = new Blob([cleanBytes], { type });
-              const fileName = `${name}${setting.suffix}${extension}`;
-              const blobURL = window.URL.createObjectURL(blob);
-              console.log(fileName, blobURL, "xxxxx");
-              blobUrls.push(blobURL);
-            }
+        if (event?.data?.pluginMessage?.type === "capture-bytes-success") {
+          const { bytesArray } = event?.data?.pluginMessage;
+          for( let data of bytesArray){
+            const { bytes, name, setting } = data;
+            const cleanBytes = typedArrayToBuffer(bytes);
+            const type = exportTypeToBlobType(setting.format);
+            const extension = exportTypeToFileExtension(setting.format);
+            let blob = new Blob([cleanBytes], { type });
+            const file = new File([blob], `${name}${setting.suffix}${extension}`, { type });
+            const blobURL = window?.URL?.createObjectURL(file);
+            blobUrls.push(blobURL);
           }
         }
         setBlobUrls(blobUrls);

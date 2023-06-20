@@ -7,44 +7,18 @@ import MarkdownViewer from "../components/MarkdownViewer";
 import withHeader from "../hoc/header";
 import "../css/comments.css";
 
-const InfoSection = ({ issue }: { issue: Issue }) => {
-  const { token } = useGithub();
+const InfoSection = ({ issue, token }: { issue: Issue; token: any }) => {
   const { capture, isLoading: isLoadingCaptureEvent, blobUrls } = useCapture();
+  const [preview,setPreview] = useState(undefined);
   const onClickComment = () => {
     capture();
   };
-  const postBlob = async (blobUrl) => {
-    if (!blobUrl) return;
-    let blobApiLink = issue?.repository?.url;
-    if (!blobApiLink) return;
-    console.log(token,'xxxxx')
-    if(!token?.access_token) return;
-    blobApiLink = blobApiLink + "/git/blobs";
-    
-    try {
-      const response = await axios.post(
-        blobApiLink,
-        {
-          content: blobUrl,
-        },
-        {
-          headers: {
-            Authorization: `${token?.token_type} ${token.access_token}`,
-            Accept: 'application/vnd.github+json'
-          },
-        }
-      );
-      console.log("response", response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
   useEffect(() => {
-    console.log("blobUrls incomming", blobUrls);
-    if (blobUrls?.length) {
-      blobUrls.forEach(postBlob);
+    if(blobUrls && blobUrls[0]){
+      setPreview(blobUrls[0])
     }
-  }, [blobUrls,token]);
+  }, [blobUrls, token]);
   return (
     <div className="info-section">
       {/* <h2>Comment Information</h2> */}
@@ -76,6 +50,7 @@ const InfoSection = ({ issue }: { issue: Issue }) => {
             {isLoadingCaptureEvent ? "Loading..." : "Comment on issue"}
           </button>
         </p>
+        {preview && (<img src={preview} alt="screenshot" />)}
         {/* additional information */}
       </div>
     </div>
@@ -131,8 +106,9 @@ const Comments = () => {
               </li>
             ))}
           </ul>
+          
         </div>
-        <InfoSection issue={location?.state} />
+        <InfoSection issue={location?.state} token={token} />
       </div>
     </div>
   );
