@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import withHeader from "../hoc/header";
 import { useCapture } from "../hooks/capture";
+import { useLocation } from "react-router-dom";
 
-const CommentPreview = ({ issue ,token}: { issue: Issue,token: any }) => {
+const CommentPreview = () => {
   const [preview, setPreview] = useState(undefined);
   const [isLoading,setLoading] = useState(false);
+  const location = useLocation();
   const { capture, isLoading: isLoadingCaptureEvent, blobUrls } = useCapture();
   const onClickShowPreview = () => {
     capture();
   };
   const commentOnIssue = ()=>{
     setLoading(true);
-    console.log(issue,token)
+    console.log(location?.state)
     setLoading(false);
   }
   useEffect(() => {

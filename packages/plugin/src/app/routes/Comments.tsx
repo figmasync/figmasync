@@ -35,9 +35,11 @@ const InfoSection = ({ issue, token }: { issue: Issue; token: any }) => {
         <p>
           <button
             onClick={() => {
-              console.log(issue, token,'xxxx from parent')
               navigate("/preview", {
-                state: issue,
+                state: {
+                  issue,
+                  token
+                },
               });
             }}
           >
