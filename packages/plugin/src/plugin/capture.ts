@@ -8,7 +8,9 @@ const capture = async (nodes: PageNode) => {
   const { selection } = nodes;
   if (!selection || selection.length === 0) {
     figma?.notify("Please select at least one node");
-    return;
+    figma?.ui?.postMessage({
+      type: "capture-bytes-success",
+    });
   }
   const bytesArray: any[] = [];
   await Promise.all(

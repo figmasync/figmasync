@@ -12,7 +12,7 @@ const CustomRouter = () => {
                 <Route path="/" element={<Login />} />
                 <Route path="/issues" element={<ListIssue />} />
                 <Route path="/comments" element={<Comments />} />
-                <Route path="/comments-preview" element={<CommentPreview />} />
+                <Route path="/preview" element={<CommentPreview />} />
             </Routes>
         </MemoryRouter>
     )
