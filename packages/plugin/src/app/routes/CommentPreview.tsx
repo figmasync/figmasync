@@ -8,9 +8,7 @@ const CommentPreview = () => {
   const onClickShowPreview = () => {
     capture();
   };
-  useEffect(() => {
-    console.log(isLoadingCaptureEvent, "xxxx");
-  }, [isLoadingCaptureEvent]);
+
   useEffect(() => {
     if (blobUrls && blobUrls[0]) {
       setPreview(blobUrls[0]);
