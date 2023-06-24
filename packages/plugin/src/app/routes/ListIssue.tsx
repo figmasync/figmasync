@@ -17,8 +17,8 @@ const GithubIssuesList = ({ issues = [] }) => {
           <button
             className="issue-open-comment"
             onClick={() => {
-              navigate("/preview", {
-                state: issue,
+              navigate("/comments", {
+                state: issue  
               });
             }}
           >
