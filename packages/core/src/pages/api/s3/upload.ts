@@ -4,14 +4,36 @@ import multer from "multer";
 import { promisify } from "util";
 import S3Client from "@/lib/s3";
 import { generateRandomName } from "@/lib/random";
+import Cors from "cors";
+
 const upload = multer();
 const uploadMiddleware = promisify(upload.single("file"));
 
+const cors = Cors({
+  methods: ["POST", "GET", "HEAD"],
+});
+
+function runMiddleware(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  fn: Function
+) {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result: any) => {
+      if (result instanceof Error) {
+        return reject(result);
+      }
+
+      return resolve(result);
+    });
+  });
+}
 export default async function handler(
   req: NextApiRequest | any,
   res: NextApiResponse<any> | any
 ) {
   try {
+    await runMiddleware(req, res, cors);
     if (req.method === "POST") {
       await uploadMiddleware(req, res);
       if (!req.file) {
@@ -19,7 +41,9 @@ export default async function handler(
       }
       const file = req.file;
       const s3Client = new S3Client();
-      const fileName = generateRandomName() + "_" + file?.originalname;
+      let fileName = generateRandomName() + "_" + file?.originalname;
+      // replace whitespace
+      fileName = fileName.replace(/\s/g, "");
       const folderPath = "test";
       const uploadResponse = await s3Client.uploadFile({
         fileName: fileName,

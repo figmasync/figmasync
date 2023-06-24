@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 const useCapture = () => {
   const [blobUrls,setBlobUrls] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [files,setFiles] = useState([])
   const capture = () => {
     parent.postMessage({ pluginMessage: { type: "capture-nodes" } }, "*");
     setIsLoading(true);
@@ -50,6 +50,7 @@ const useCapture = () => {
     window.onmessage = (event: any) => {
       try {
         const blobUrls = [];
+        const files = [];
         if (event?.data?.pluginMessage?.type === "capture-bytes-success") {
           const { bytesArray } = event?.data?.pluginMessage;
           for( let data of bytesArray){
@@ -59,10 +60,12 @@ const useCapture = () => {
             const extension = exportTypeToFileExtension(setting.format);
             let blob = new Blob([cleanBytes], { type });
             const file = new File([blob], `${name}${setting.suffix}${extension}`, { type });
+            files.push(file);
             const blobURL = window?.URL?.createObjectURL(file);
             blobUrls.push(blobURL);
           }
         }
+        setFiles(files);
         setBlobUrls(blobUrls);
       } catch (error) {
         console.error(error);
@@ -71,7 +74,7 @@ const useCapture = () => {
       }
     };
   }, []);
-  return { blobUrls, capture, isLoading };
+  return { blobUrls, capture, isLoading, files };
 };
 
 export { useCapture };
