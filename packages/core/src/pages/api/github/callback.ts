@@ -2,15 +2,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 import { GITHUB_ACCESS_TOKEN_URL } from "@/lib/config";
+import corsHandler from "@/utils/cors";
 type Data = {
   message?: string;
   info?: string;
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
+const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  await corsHandler(req, res);
   const code = req?.query?.code;
   if (!code) {
     return res
@@ -43,4 +42,6 @@ export default async function handler(
   //   return res
   //     .status(500)
   //     .json({ message: "Internal Server Error", info: "Not implemented" });
-}
+};
+
+export default handler;
