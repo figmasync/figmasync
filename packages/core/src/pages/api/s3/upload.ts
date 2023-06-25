@@ -4,36 +4,17 @@ import multer from "multer";
 import { promisify } from "util";
 import S3Client from "@/lib/s3";
 import { generateRandomName } from "@/lib/random";
-import Cors from "cors";
+import corsHandler from "@/utils/cors";
 
 const upload = multer();
 const uploadMiddleware = promisify(upload.single("file"));
 
-const cors = Cors({
-  methods: ["POST", "GET", "HEAD"],
-});
-
-function runMiddleware(
-  req: NextApiRequest,
-  res: NextApiResponse,
-  fn: Function
-) {
-  return new Promise((resolve, reject) => {
-    fn(req, res, (result: any) => {
-      if (result instanceof Error) {
-        return reject(result);
-      }
-
-      return resolve(result);
-    });
-  });
-}
 export default async function handler(
   req: NextApiRequest | any,
   res: NextApiResponse<any> | any
 ) {
   try {
-    await runMiddleware(req, res, cors);
+    await corsHandler(req, res);
     if (req.method === "POST") {
       await uploadMiddleware(req, res);
       if (!req.file) {
@@ -51,14 +32,17 @@ export default async function handler(
         contentType: file?.mimetype,
         folderPath,
       });
-      console.log(uploadResponse, "xx");
       let fileUrl = process?.env?.IMAGE_PUBLIC_URL ?? "";
       if (!fileUrl.endsWith("/")) {
         fileUrl += "/";
       }
 
-      fileUrl += folderPath + "/" + fileName;
+      fileUrl += folderPath + "/" + fileName; 
       res.status(200).json({ url: fileUrl });
+    } else {
+      return res.status(405).json({
+        message: "Method Not Allowed",
+      });
     }
   } catch (error) {
     console.log(error);
