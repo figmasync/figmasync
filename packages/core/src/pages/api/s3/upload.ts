@@ -37,7 +37,7 @@ export default async function handler(
         fileUrl += "/";
       }
 
-      fileUrl += folderPath + "/" + fileName;
+      fileUrl += folderPath + "/" + fileName; 
       res.status(200).json({ url: fileUrl });
     } else {
       return res.status(405).json({
