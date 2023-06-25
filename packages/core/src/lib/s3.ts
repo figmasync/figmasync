@@ -5,6 +5,7 @@ import {
   PutObjectCommandInput,
   PutObjectRequest,
 } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 class S3Client {
   private readonly S3_ACCESS_KEY_ID: string | undefined;
@@ -46,10 +47,19 @@ class S3Client {
       Metadata: params?.metadata,
       ContentType: params?.contentType,
     };
-    const data = await this.client.send(new PutObjectCommand(uploadParams));
-    return data
+    return this.client.send(new PutObjectCommand(uploadParams));
   }
-
+  async getSignedUrl(params: { key: string; expiresIn: number }) {
+    const searchParams = {
+      Bucket: this.S3_BUCKET,
+      Key: params?.key,
+    };
+    const command = new GetObjectCommand(searchParams);
+    // max expiration 7days as seconds
+    return getSignedUrl(this.client, command, {
+      expiresIn: params?.expiresIn ?? 3600,
+    });
+  }
 }
 
 export default S3Client;

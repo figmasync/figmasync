@@ -32,7 +32,6 @@ export default async function handler(
         contentType: file?.mimetype,
         folderPath,
       });
-      console.log(uploadResponse, "xx");
       let fileUrl = process?.env?.IMAGE_PUBLIC_URL ?? "";
       if (!fileUrl.endsWith("/")) {
         fileUrl += "/";
@@ -40,6 +39,10 @@ export default async function handler(
 
       fileUrl += folderPath + "/" + fileName;
       res.status(200).json({ url: fileUrl });
+    } else {
+      return res.status(405).json({
+        message: "Method Not Allowed",
+      });
     }
   } catch (error) {
     console.log(error);
