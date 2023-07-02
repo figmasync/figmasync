@@ -8,6 +8,18 @@ const Header = () => {
   const backButton = () => {
     return navigate(-1);
   };
+  const logout = () => {
+    parent.postMessage({ pluginMessage: { type: "remove-github-token" } }, "*");
+    parent.postMessage(
+      {
+        pluginMessage: {
+          type: "show-notification",
+          message: "Logout successful",
+        },
+      },
+      "*"
+    );
+  };
   return (
     <div className="container">
       <button
@@ -18,7 +30,9 @@ const Header = () => {
       >
         Back
       </button>
-      <button className="logout-button">Logout</button>
+      <button onClick={logout} className="logout-button">
+        Logout
+      </button>
     </div>
   );
 };
