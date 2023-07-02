@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GITHUB_LOGIN_URL } from "../../config";
-import {useGithub} from '../hooks/github';
+import { useGithub } from "../hooks/github";
 import "../css/login.css";
 
 const Login = () => {
   const [token, setToken] = useState("");
   const navigate = useNavigate();
-  const {token:githubToken} = useGithub();
+  const { token: githubToken } = useGithub();
   const loginWithGithub = () => {
     window?.open(GITHUB_LOGIN_URL);
   };
@@ -35,11 +35,13 @@ const Login = () => {
       }
     };
   }, []);
-  useEffect(()=>{
-    if(githubToken){
-      navigate('/issues');
+  useEffect(() => {
+    if (githubToken) {
+      navigate("/issues");
     }
-  },[githubToken])
+
+  }, [githubToken]);
+
   return (
     <div className="github-login">
       <button
