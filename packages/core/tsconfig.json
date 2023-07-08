@@ -16,12 +16,10 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
+      "@/db-controller/*": ["./src/lib/db/*"],
       "@/*": ["./src/*"]
     },
-    "typeRoots":[
-      "node_modules/@types", 
-      "./src/@types"
-    ]
+    "typeRoots": ["node_modules/@types", "./src/@types"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

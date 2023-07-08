@@ -15,6 +15,9 @@ datasource db {
 
 model polls {
   id        Int      @id @default(autoincrement())
-  access_token      String   @db.VarChar(255)
+  code_verifier      String   @unique @db.VarChar(300)
+  code_challenge   String @unique @db.VarChar(300)
+  token Json?  @db.Json
   is_active Boolean @default(true)
+  created_at  DateTime   @default(now())
 }
