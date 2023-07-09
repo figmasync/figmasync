@@ -6,7 +6,7 @@ const useGithub = () => {
     parent.postMessage({ pluginMessage: { type: "get-github-token" } }, "*");
   }, []);
   useEffect(() => {
-    window.onmessage = (event: any) => {
+    window.addEventListener("message", (event: MessageEvent<any>) => {
       try {
         if (
           event?.data?.pluginMessage?.token &&
@@ -19,7 +19,7 @@ const useGithub = () => {
       } catch (error) {
         console.log(error);
       }
-    };
+    });
   }, []);
   return { token, setToken };
 };

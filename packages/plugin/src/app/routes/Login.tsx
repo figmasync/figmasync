@@ -110,6 +110,7 @@ const GitHubLoginButton = () => {
   useEffect(() => {
     if (githubToken) {
       // call api for user for verifying token
+      navigate("/issues");
     } else {
       generateCodeChallenge();
     }
