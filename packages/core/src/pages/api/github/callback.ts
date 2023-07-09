@@ -52,15 +52,13 @@ const handler = async (
     await updatePolls({
       code_challenge: stateData?.code,
       token: {
-        token: encryptData(response?.data?.token, encryptionKey),
-        scope: encryptData(response?.data?.scope, encryptionKey),
-        token_type: encryptData(response?.data?.token_type, encryptionKey),
+        data: encryptData(response?.data, encryptionKey),
       },
     });
-   
+
     return res.redirect("/github/callback?login_status=success");
   } catch (error: any) {
-    console.log(error)
+    console.log(error);
     return res.redirect(
       "/github/callback?login_status=failed&message=Internal Server Error"
     );

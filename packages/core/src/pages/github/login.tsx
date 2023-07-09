@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 const GithubLogin = ({ loginUrl, clientId }: GithubLoginProps) => {
   const router = useRouter();
   const { code } = router?.query;
-  const stateData = Buffer.from(JSON.stringify({ code })).toString("base64");
+  const stateData = code &&  Buffer.from(JSON.stringify({ code })).toString("base64");
   if (!code) {
     return (
       <div className="flex items-center justify-center h-screen">

@@ -3,8 +3,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import corsHandler from "@/utils/cors";
 import { v4 as UUID } from "uuid";
 import sha256 from "sha256";
-
-import { getPollsWithCodeVerifier as getPolls, insertIntoPoll } from "@/db-controller/poll";
+import { decryptData } from "@/lib/encrypt";
+import {
+  getPollsWithCodeVerifier as getPolls,
+  insertIntoPoll,
+} from "@/db-controller/poll";
 
 // PKCE CONCEPT
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
@@ -34,7 +37,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         message: "Bad request",
       });
     }
-    const currentPoll:any = await getPolls({
+    const currentPoll: any = await getPolls({
       code_verifier: code_verifier?.trim(),
     });
     const codeChallenge = sha256.x2(code_verifier);
@@ -43,9 +46,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         message: "code not verified",
       });
     }
-    return res.status(200).json({
-      token: currentPoll?.token?.token
-    });
+    const encryptionKey =
+      process?.env?.DB_POLL_ENCRYPTION_KEY || "sample_encryption_key";
+    let decryptDataDetails;
+    try {
+      if (!currentPoll?.token?.data) {
+        return res.status(401).json({ message: "Encrypt data not found" });
+      }
+      decryptDataDetails = JSON.parse(
+        decryptData(currentPoll?.token?.data, encryptionKey) ?? "{}"
+      );
+    } catch (error) {
+      return res.status(401).json({ message: "Decryption failed" });
+    }
+    return res.status(200).json(decryptDataDetails);
   }
   return res.status(405).json({ message: "Method not allowed" });
 };
