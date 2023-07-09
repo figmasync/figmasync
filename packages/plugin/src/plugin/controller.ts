@@ -1,4 +1,3 @@
-import { Buffer } from "buffer";
 import { capture } from "./capture";
 
 figma.showUI(__html__, {
@@ -11,9 +10,9 @@ figma.ui.onmessage = async (msg) => {
     const token = msg?.token;
     //  base64 decode token
     try {
-      let data = Buffer.from(token, "base64").toString("ascii");
-      JSON.parse(data);
-      await figma.clientStorage.setAsync("github-token", data);
+      // let data = Buffer.from(token, "base64").toString("ascii");
+      // JSON.parse(data);
+      await figma.clientStorage.setAsync("github-token", JSON.stringify(token));
       figma.ui.postMessage({
         type: "save-github-token-success",
       });

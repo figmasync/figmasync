@@ -51,7 +51,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     let decryptDataDetails;
     try {
       if (!currentPoll?.token?.data) {
-        return res.status(401).json({ message: "Encrypt data not found" });
+        return res.status(200).json({});
       }
       decryptDataDetails = JSON.parse(
         decryptData(currentPoll?.token?.data, encryptionKey) ?? "{}"
