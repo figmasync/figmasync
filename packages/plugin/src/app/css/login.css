@@ -4,18 +4,6 @@
     align-items: center;
   }
   
-  .github-login-button {
-    display: inline-block;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 4px;
-    background-color: #333;
-    color: #fff;
-    text-decoration: none;
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-  }
-  
   .github-access-token {
     display: flex;
     flex-direction: row;
@@ -44,3 +32,40 @@
     font-size: 1.2rem;
   }
   
+
+  /* 
+  
+  */
+
+  .github-login-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .github-login-button:hover {
+    background-color: #555;
+  }
+  
+  .github-login-button svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+  
+  .github-login-button span {
+    font-size: 14px;
+  }
+
+  .centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Adjust the height to your requirements */
+  }

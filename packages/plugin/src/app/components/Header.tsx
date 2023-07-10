@@ -19,6 +19,14 @@ const Header = () => {
       },
       "*"
     );
+    parent.postMessage(
+      {
+        pluginMessage: {
+          type: "close-plugin",
+        },
+      },
+      "*"
+    );
   };
   return (
     <div className="container">

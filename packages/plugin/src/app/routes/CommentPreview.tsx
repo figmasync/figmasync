@@ -30,7 +30,7 @@ const CommentPreview = () => {
       data.append("file", files[0]);
 
       const response = await axios.post(
-        "http://localhost:3000/api/s3/upload",
+        "http://localhost:3000/api/v1/s3/upload",
         data,
         {
           headers: {
