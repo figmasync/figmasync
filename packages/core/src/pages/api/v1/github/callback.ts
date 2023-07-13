@@ -1,10 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
-import { GITHUB_ACCESS_TOKEN_URL } from "@/lib/config";
+import { GITHUB_ACCESS_TOKEN_URL, GITHUB_USER_API } from "@/lib/config";
 import corsHandler from "@/utils/cors";
 import { updatePolls } from "@/db-controller/poll";
+import { getUser, insertUser } from "@/db-controller/user";
 import { encryptData } from "@/lib/encrypt";
+import sha256 from "sha256";
 type Data = {
   message?: string;
   info?: string;
@@ -40,13 +42,33 @@ const handler = async (
       }
     );
 
-    if (response?.data?.error) {
-      console.log(response?.data);
+    const userDetails = await axios.get(GITHUB_USER_API, {
+      headers: {
+        Authorization: `${response?.data?.token_type} ${response?.data?.access_token}`,
+      },
+    });
+
+    if (response?.data?.error || userDetails?.data?.error) {
       return res.redirect(
         "/github/callback?login_status=failed&message=" +
           response?.data?.error?.message
       );
     }
+    /**
+     * user
+     */
+    const { id, login } = userDetails?.data;
+    if (id) {
+      const uuid = sha256.x2(JSON.stringify({ id, login }));
+      const userData = await getUser(uuid);
+      if (!userData) {
+        await insertUser({
+          id: uuid,
+          githubUserId: id?.toString(),
+        });
+      }
+    }
+
     const encryptionKey =
       process?.env?.DB_POLL_ENCRYPTION_KEY || "sample_encryption_key";
     await updatePolls({
