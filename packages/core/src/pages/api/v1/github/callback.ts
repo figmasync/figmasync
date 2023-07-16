@@ -64,7 +64,8 @@ const handler = async (
       if (!userData) {
         await insertUser({
           id: uuid,
-          githubUserId: id?.toString(),
+          providerId: id?.toString(),
+          provider: "github",
         });
       }
     }

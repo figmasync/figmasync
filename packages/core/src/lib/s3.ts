@@ -46,6 +46,7 @@ class S3Client {
       ACL: params?.access ?? "private",
       Metadata: params?.metadata,
       ContentType: params?.contentType,
+      CacheControl: 'public, max-age=86400 '
     };
     return this.client.send(new PutObjectCommand(uploadParams));
   }

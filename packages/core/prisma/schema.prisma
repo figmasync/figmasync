@@ -24,7 +24,8 @@ model polls {
 
 model users {
   id String @id 
-  github_user_id String @unique
+  provider_id String @unique
+  provider String 
   is_active Boolean @default(true)
   created_at  DateTime   @default(now())
 }

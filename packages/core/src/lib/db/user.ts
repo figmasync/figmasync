@@ -9,10 +9,11 @@ const getUser = (id: string) => {
     },
   });
 };
-const insertUser = (data: { id: string; githubUserId: string }) => {
+const insertUser = (data: { id: string; providerId: string,provider:string }) => {
   return prisma.users.create({
     data: {
-      github_user_id: data?.githubUserId,
+      provider_id: data?.providerId,
+      provider: data?.provider,
       id: data?.id,
     },
   });
