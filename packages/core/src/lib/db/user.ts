@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const getUser = (id: string) => {
   return prisma.users?.findUnique({
     where: {
-      id: id,
+      provider_id: id
     },
   });
 };

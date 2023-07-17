@@ -1,3 +1,4 @@
+import crypto from "crypto";
 const generateRandomName = (numberLength = 10): string => {
   const adjectives: string[] = [
     "happy",
@@ -30,14 +31,17 @@ const generateRandomName = (numberLength = 10): string => {
   const random_adjective: string = adjectives[random_adjective_index];
   const random_noun: string = nouns[random_noun_index];
 
-  const minNumber: number = Math.pow(10, numberLength  - 1);
+  const minNumber: number = Math.pow(10, numberLength - 1);
   const maxNumber: number = Math.pow(10, numberLength) - 1;
-  const random_number: string = Math.floor(minNumber + Math.random() * (maxNumber - minNumber + 1)).toString();
-
+  const random_number: string = Math.floor(
+    minNumber + Math.random() * (maxNumber - minNumber + 1)
+  ).toString();
 
   return `${random_number}_${random_adjective}_${random_noun}`;
 };
 
-export {
-  generateRandomName
-}
+const generateRandomId = (keyLength = 16) => {
+  const randomBytes = crypto.randomBytes(keyLength);
+  return randomBytes.toString("hex");
+};
+export { generateRandomName, generateRandomId };

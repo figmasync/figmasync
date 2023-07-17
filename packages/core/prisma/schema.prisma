@@ -29,3 +29,4 @@ model users {
   is_active Boolean @default(true)
   created_at  DateTime   @default(now())
 }
+

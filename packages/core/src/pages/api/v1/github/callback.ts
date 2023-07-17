@@ -7,6 +7,7 @@ import { updatePolls } from "@/db-controller/poll";
 import { getUser, insertUser } from "@/db-controller/user";
 import { encryptData } from "@/lib/encrypt";
 import sha256 from "sha256";
+import { generateRandomId } from "@/lib/random";
 type Data = {
   message?: string;
   info?: string;
@@ -58,9 +59,11 @@ const handler = async (
      * user
      */
     const { id, login } = userDetails?.data;
+    let uuid;
     if (id) {
-      const uuid = sha256.x2(JSON.stringify({ id, login }));
-      const userData = await getUser(uuid);
+      // const uuid = sha256.x2(JSON.stringify({ id, login }));
+      uuid = generateRandomId(16);
+      const userData = await getUser(id?.toString());
       if (!userData) {
         await insertUser({
           id: uuid,
@@ -75,7 +78,7 @@ const handler = async (
     await updatePolls({
       code_challenge: stateData?.code,
       token: {
-        data: encryptData(response?.data, encryptionKey),
+        data: encryptData({ ...response?.data, uuid }, encryptionKey),
       },
     });
 
